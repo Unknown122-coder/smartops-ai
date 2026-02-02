@@ -2,9 +2,9 @@ from fastapi import FastAPI, UploadFile, File
 from fastapi.responses import FileResponse
 import pandas as pd
 
-from backend.preprocessing import clean_data
-from backend.model import train_and_predict
-from backend.report import generate_pdf, REPORT_PATH
+from preprocessing import clean_data
+from model import train_and_predict
+from report import generate_pdf, REPORT_PATH
 
 from database import get_db
 from fastapi import Form
