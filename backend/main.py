@@ -7,7 +7,7 @@ from model import train_and_predict
 from report import generate_pdf, REPORT_PATH
 
 from database import get_db
-from fastapi import Form
+from fastapi import Form, HTTPException
 
 app = FastAPI()
 
@@ -51,25 +51,28 @@ def download_report():
 
 @app.post("/register/")
 def register(email: str = Form(...), password: str = Form(...)):
-    conn = get_db()
     try:
+        conn = get_db()
         conn.execute(
             "INSERT INTO users (email, password) VALUES (?, ?)",
             (email, password)
         )
         conn.commit()
         return {"message": "User registered"}
-    except:
-        return {"error": "User already exists"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 @app.post("/login/")
 def login(email: str = Form(...), password: str = Form(...)):
-    conn = get_db()
-    cur = conn.execute(
-        "SELECT * FROM users WHERE email=? AND password=?",
-        (email, password)
-    )
-    user = cur.fetchone()
-    if user:
-        return {"success": True}
-    return {"success": False}
+    try:
+        conn = get_db()
+        cur = conn.execute(
+            "SELECT * FROM users WHERE email=? AND password=?",
+            (email, password)
+        )
+        user = cur.fetchone()
+        if user:
+            return {"success": True}
+        return {"success": False}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
