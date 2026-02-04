@@ -70,15 +70,10 @@ st.set_page_config(page_title="SmartOps AI", layout="wide")
 st.title("📊 SmartOps AI - Business Data to Decisions")
 
 # Model selection
-model_choice = st.selection(
-    "Choose ML Model",
-    options=[
-        "random_forest",
-        "logistic",
-        "linear"
-    ]
+model_choice = st.selectbox(
+    "Choose Machine Learning Model",
+    ["random_forest", "logistic", "linear"]
 )
-
 
 
 uploaded_file = st.file_uploader("Upload your business CSV file", type=["csv"])
