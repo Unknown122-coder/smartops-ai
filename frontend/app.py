@@ -17,8 +17,9 @@ if not st.session_state.logged_in:
     with col1:
         if st.button("Login"):
             r = requests.post(
-                "http://127.0.0.1.8000/login/",
-                data={"email": email, "password": password}
+                f"{BACKEND_URL}/login/",
+                data={"email": email, "password": password},
+                timeout=20
             )
             if r.json().get("success"):
                 st.session_state.logged_in = True
@@ -29,8 +30,9 @@ if not st.session_state.logged_in:
     with col2:
         if st.button("Register"):
             r = requests.post(
-                "http://127.0.0.1.8000/register/",
-                data={"email": email, "password": password}
+                f"{BACKEND_URL}/register/",
+                data={"email": email, "password": password},
+                timeout=20
             )
             st.success("Registered. Now login.")
 
