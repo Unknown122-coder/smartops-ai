@@ -3,7 +3,7 @@ import streamlit as st
 import requests
 import pandas as pd
 
-
+BACKEND_URL = "https://smartops-backend-dt2f.onrender.com"
 
 if "logged_in" not in st.session_state:
     st.session_state.logged_in = False
@@ -41,7 +41,7 @@ if not st.session_state.logged_in:
 
 st.set_page_config(page_title="SmartOps AI", layout="wide")
 
-BACKEND_URL = "https://smartops-backend-dt2f.onrender.com"
+
 
 st.title("📊 SmartOps AI - Business Data to Decisions")
 
