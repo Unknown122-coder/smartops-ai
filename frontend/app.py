@@ -5,6 +5,23 @@ import pandas as pd
 
 BACKEND_URL = "https://smartops-backend-dt2f.onrender.com"
 
+def safe_post(url, data):
+    try:
+        r = requests.post(url, data=data, timeout=30)
+
+        # Backend down / cold start
+        if r.status_code != 200:
+            return None, f"Server error ({r.status_code}). Please try again."
+
+        # Try parsing JSON safely
+        try:
+            return r.json(), None
+        except Exception:
+            return None, "Backend is starting up. Please wait 10–20 seconds and try again."
+
+    except requests.exceptions.RequestException:
+        return None, "Cannot connect to backend. Please try again."
+
 if "logged_in" not in st.session_state:
     st.session_state.logged_in = False
 if not st.session_state.logged_in:
@@ -16,12 +33,14 @@ if not st.session_state.logged_in:
     col1, col2 = st.columns(2)
     with col1:
         if st.button("Login"):
-            r = requests.post(
+            data, error = safe_post(
                 f"{BACKEND_URL}/login/",
-                data={"email": email, "password": password},
-                timeout=20
+                {"email": email, "password": password}
             )
-            if r.json().get("success"):
+
+            if error:
+                st.warning(error)
+            elif data.get("success"):
                 st.session_state.logged_in = True
                 st.rerun()
             else:
@@ -29,12 +48,17 @@ if not st.session_state.logged_in:
 
     with col2:
         if st.button("Register"):
-            r = requests.post(
+            data, error = safe_post(
                 f"{BACKEND_URL}/register/",
-                data={"email": email, "password": password},
-                timeout=20
+                {"email": email, "password": password}
             )
-            st.success("Registered. Now login.")
+
+            if error:
+                st.warning(error)
+            elif "error" in data:
+                st.error(data["error"])
+            else:
+                st.success("Registered successfully. Please login.")
 
     st.stop()
 
