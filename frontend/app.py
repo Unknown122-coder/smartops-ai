@@ -39,7 +39,7 @@ if not st.session_state.logged_in:
 
 st.set_page_config(page_title="SmartOps AI", layout="wide")
 
-BACKEND_URL = "http://127.0.0.1:8000"
+BACKEND_URL = "https://smartops-backend-dt2f.onrender.com"
 
 st.title("📊 SmartOps AI - Business Data to Decisions")
 
